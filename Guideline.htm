@@ -1,0 +1,635 @@
+
+<!-- saved from url=(0102)file:///C:/Users/Pulkit/Sudoku/Homework%20%235%20-%20CSCI%20570,%20Fall%202012,%20Section%2030252D.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Homework #5 - CSCI 570, Fall 2012, Section 30252D</title>
+<link href="file:///C:/Users/Pulkit/Sudoku/Homework%20#5 - CSCI 570, Fall 2012, Section 30252D_files/cs570bc.css" rel="stylesheet" type="text/css">
+<link rev="made" href="mailto:bill.cheng@acm.org"><style type="text/css"></style></head>
+<body bgcolor="#FFFFFF" link="#D02090" vlink="#996600" alink="#990000">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr><td align="CENTER" valign="TOP" width="112">
+    <!-- COL 1, should be identical to all other pages here -->
+    <table border="0" cellpadding="0" cellspacing="0" width="113">
+    <tbody><tr><td align="CENTER" valign="TOP" width="112">
+        &nbsp;
+        </td>
+    </tr>
+    <tr><td align="CENTER" valign="TOP" width="112">
+        <a href="http://www.cs.usc.edu/"><img src="file:///C:/Users/Pulkit/Sudoku/Homework%20#5 - CSCI 570, Fall 2012, Section 30252D_files/usctommy.gif" alt="USC CSD Home" border="0"></a>
+        <!-- BR>&nbsp;<BR -->
+        <!-- IMG SRC="images/small-uc.gif" BORDER=0 -->
+        </td>
+    </tr>
+    </tbody></table>
+    </td>
+    <!-- TD ALIGN=LEFT VALIGN=TOP WIDTH=13 -->
+    <!-- COL 2, should be identical to all other pages here -->
+        <!-- IMG SRC="images/spacer.gif" HEIGHT=1 WIDTH=13 -->
+    <!-- /TD -->
+    <td align="LEFT" valign="TOP">
+    <!-- COL 3, every page should be different -->
+        <br><table border="0">
+        <!-- Page Header -->
+        <tbody><tr><td align="LEFT" valigh="TOP">
+                <a href="http://merlot.usc.edu/cs570-f12/">Fall 2012</a><a>
+            </a></td>
+            <td align="RIGHT" valigh="TOP">
+                <a href="http://merlot.usc.edu/cs570-f12/">CSCI 570</a><br>
+            </td>
+        </tr>
+        
+        <!-- Page Title -->
+        <tr><td colspan="3" align="CENTER">
+                <h2>Homework #5</h2>
+                <h4>(100 points total)</h4>
+                <h2>Sudoku Puzzle Generation &amp; Solution</h2>
+                <b><i>Due 11:45PM
+                12/7/2012 (firm)</i></b>
+                <!--
+                <H3><FONT COLOR="red"><I>(Under Construction -
+                    Anything Can Change without Notice)</I></FONT></H3>
+                  -->
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="intro"><b>Assignment</b></a></font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+The main purpose of this assignment is use <b>backtracking</b>
+for generating and solving 9-by-9
+<a href="http://en.wikipedia.org/wiki/Sudoku"><b>Sudoku</b></a> puzzles.
+
+<p>
+
+<a href="http://merlot.usc.edu/cs570-f12/submit.html">Electronic submissions</a> only.
+            </p></td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="syntax"><b>Compiling</b></a></font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+Please use a <tt>Makefile</tt> so that when the grader simply enters:
+    <pre>    make hw5</pre>
+an executable named <b>hw5</b> is created.
+Please make sure that your submission conforms to
+<a href="http://merlot.usc.edu/cs570-f12/makefile.html#requirements">other
+general compilation requirements</a> 
+and <a href="http://merlot.usc.edu/cs570-f12/makefile.html#readme">README requirements</a>.
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="syntax"><b>Commandline Syntax &amp; Program
+                Output</b></a></font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+The commandline syntax for <b>hw5</b> is as follows:
+
+<pre>    <b>hw5</b> <b>solve</b> [file]
+    <b>hw5</b> <b>count</b> [-printall] [-max=n] [file]
+    <b>hw5</b> <b>gen</b> [-info] [rndfile]</pre>
+
+Square bracketed items are optional.
+If <tt>rndfile</tt> or <tt>file</tt> is not specified, your program should
+read from <tt>stdin</tt>.
+You must follow the UNIX convention that commandline options can come in any order.
+(Note: a commandline option is a commandline argument that begins with a <b><tt>-</tt></b>
+character in a commandline syntax specification.)
+Unless otherwise specified, output of your program must go to <tt>stdout</tt>
+and error messages must go to <tt>stderr</tt>.
+
+<p>
+
+The meaning of the commands are:
+
+</p><blockquote>
+<table border="0" cellpadding="0" cellspacing="0">
+    <tbody><tr><td align="RIGHT" valign="TOP"><b>solve</b></td>
+        <td valign="TOP">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+        <td valign="TOP">Read the input and build a 9-by-9 sudoku puzzle.
+            Solve the puzzle and print the solution.
+            <p>
+            A brute-force solution may be inefficient.  For an efficient
+            solution, please read the following reference:
+            <a href="http://merlot.usc.edu/cs570-f12/lectures/tentative/papers/Knuth00a.pdf">[Knuth00a]</a>
+            D. E. Knuth.  <i>Dancing Links.</i>  Millenial Perspectives in Computer Science, pages 187-214, 2000.
+        </p></td>
+    </tr>
+    <tr><td colspan="3">&nbsp;</td></tr>
+    <tr><td align="RIGHT" valign="TOP"><b>count</b></td>
+        <td valign="TOP">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+        <td valign="TOP">Read the input and build a 9-by-9 sudoku puzzle.
+            Solve the puzzle, backtrack through all solutions, print the total number of solutions.
+            If the <b><tt>-printall</tt></b> commandline option is specified,
+            print all the solutions.
+            If the <b><tt>-max</tt></b> commandline option is specified,
+            you should stop looking for solutions after <tt>n</tt> solutions have been found.
+            If <tt>n</tt> is zero
+            (which is the default), you should explore all possible solutions
+            to the specified puzzle.
+        </td>
+    </tr>
+    <tr><td colspan="3">&nbsp;</td></tr>
+    <tr><td align="RIGHT" valign="TOP"><b>gen</b></td>
+        <td valign="TOP">&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+        <td valign="TOP">Generate a 9-by-9 sudoku puzzle.
+            First, you need to generate a solved puzzle as follows.
+            <ol>
+            <li>Starts with a 9-by-9 grid and fill each row
+                with an incremental pattern (from 1 through 9).
+            </li><li>Use random numbers from the input to <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/#shuffle">randomly shuffle</a> each row in the puzzle.
+                Each row is now a priority list of numbers to choose from when creating the
+                corresponding row in the sudoku puzzle.
+                If the <b><tt>-info</tt></b> commandline option is specified,
+                you should print out the 9 priority lists.
+            </li><li>Using a row-major order, fill the sudoku puzzle according to the priority
+                numbers.  If a number would result in a conflict, you should try the next
+                number in the priority list.  If you have exhausted all the numbers in
+                the priority list, you must backtrack.
+            </li><li>Keep going until you fill the whole puzzle.  Print the solved puzzle.
+            </li></ol>
+
+            Now you need to cover cells from the solved puzzle to produce a regular sudoku puzzle.
+            <ol>
+            <li>Use random numbers from the input to randomly cover a cell as follows:
+                <ol type="a">
+                <li>Initially, put all the cells in a list in row-major order.
+                </li><li>Use <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/#randomindex"><tt>RandomIndex(L)</tt></a>
+                    to select a cell from the list.
+                    <tt>L</tt> is the current length of this list.
+                </li><li>Remove the cell from this list.
+                </li><li>If the <b><tt>-info</tt></b> commandline option is specified,
+                    you must print out which cell you are removing.
+                </li></ol>
+            </li><li>Solve the puzzle to see how many solutions you can get.
+            </li><li>If the number of solutions is one, go back and cover more cells.
+            </li><li>Otherwise, the number of solutions for the current puzzle is more than one;
+                therefore, it cannot be used as a puzzle.  Print the last puzzle that has
+                only one solution.
+            </li></ol>
+        </td>
+    </tr>
+</tbody></table>
+</blockquote>
+
+Pleaes output reasonable and useful error messages if the command
+is malformed or file does not exist or inaccessible.
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="format"><b>Sudoku File Format</b></a>
+                    </font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+A sudoku puzzle file is an ASCII text file that represented a 9-by-9 sudoku grid.
+A covered cell is represented by a period character.
+An uncovered cell is represented by a single digit number (1 through 9).
+All other characters must be <b>ignored</b>.
+Exactly 9 rows of the input can contain periods and digits.
+<a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku.txt">Here is an exampel of a valid sudoku input puzzle file</a>:
+    <pre>    +---+---+---+
+    |53.|.7.|...|
+    |6..|195|...|
+    |.98|...|.6.|
+    +---+---+---+
+    |8..|.6.|..3|
+    |4..|8.3|..1|
+    |7..|.2.|..6|
+    +---+---+---+
+    |.6.|...|28.|
+    |...|419|..5|
+    |...|.8.|.79|
+    +---+---+---+</pre>
+
+Removing all the unnecessary characters from the above input,
+<tt>soduku.txt</tt> can be simplied as
+<a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku2.txt"><tt>soduku2.txt</tt></a>, which is also a valid
+input file:
+    <pre>    53..7....
+    6..195...
+    .98....6.
+    8...6...3
+    4..8.3..1
+    7...2...6
+    .6....28.
+    ...419..5
+    ....8..79</pre>
+
+When outputing a sudoku puzzle or a solution to a sudoku puzzle,
+your output must look like <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku.txt"><tt>soduku.txt</tt></a>
+with exactly 13 lines in the output file and every line contains
+exactly 13 characters.
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="output"><b>Output Examples</b></a>
+                    </font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+<h4>Solve:</h4>
+
+<blockquote>
+    The <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku-sol.txt">output</a> for running
+    <b><tt>"hw5 solve <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku.txt">sudoku.txt</a></tt>"</b> or
+    <b><tt>"hw5 solve <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku2.txt">sudoku2.txt</a></tt>"</b>
+    should look like the following:
+    <pre>    +---+---+---+
+    |..4|6.8|912|
+    |.72|...|348|
+    |1..|342|5.7|
+    +---+---+---+
+    |.59|7.1|42.|
+    |.26|.5.|79.|
+    |.13|9.4|85.|
+    +---+---+---+
+    |9.1|537|..4|
+    |287|...|63.|
+    |345|2.6|1..|
+    +---+---+---+</pre>
+
+    Numbers in the input puzzle are replaced by periods in the solution and
+    periods in the input puzzle are replaced by numbers which
+    correspond to the solved puzzle.
+</blockquote>
+
+<h4>Count:</h4>
+
+<blockquote>
+    The output for running
+    <b><tt>"hw5 count <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku.txt">sudoku.txt</a></tt>"</b>
+    should simply be:
+    <pre>    1 solution found</pre>
+
+    The output for running
+    <b><tt>"hw5 count <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku3.txt">sudoku3.txt</a></tt>"</b>
+    should simply be:
+    <pre>    4 solutions found</pre>
+
+    One possible output for running
+    <b><tt>"hw5 count -printall -max=3 <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku3.txt">sudoku3.txt</a></tt>"</b>
+    <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku3-sol.txt">is provited here</a>.
+    Since there is no required way of exploring multpile solutions,
+    the order of the individual solutions can be displayed in any order.
+    But the format of your output should be the same as the
+    <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/sudoku3-sol.txt">sample output</a>.
+</blockquote>
+
+<h4>Gen:</h4>
+
+<blockquote>
+    The <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/gen-output.txt">output</a> for running
+    <b><tt>"hw5 gen <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/rnd.bin">rnd.bin</a></tt>"</b>
+    should look like the following:
+    <pre>    Full board generated:
+
+    +---+---+---+
+    |794|512|386|
+    |318|964|257|
+    |562|387|914|
+    +---+---+---+
+    |429|831|765|
+    |871|256|493|
+    |635|749|128|
+    +---+---+---+
+    |247|695|831|
+    |953|178|642|
+    |186|423|579|
+    +---+---+---+
+    
+    Solution (after 31 values unassigned):
+    
+    +---+---+---+
+    |79.|51.|3.6|
+    |318|.6.|2.7|
+    |...|387|.14|
+    +---+---+---+
+    |4..|831|765|
+    |871|25.|493|
+    |635|.49|128|
+    +---+---+---+
+    |...|6.5|.31|
+    |9..|..8|...|
+    |1..|42.|.7.|
+    +---+---+---+</pre>
+
+    <a name="geninfoex">The</a> <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/gen-info-output.txt">output</a> for running
+    <b><tt>"hw5 gen -info <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/rnd.bin">rnd.bin</a></tt>"</b>
+    should look like the following:
+    <pre>    Random shuffle results:
+    
+    794512386
+    319826457
+    591386724
+    492387156
+    278154693
+    921876354
+    721346589
+    962345781
+    413586297
+    
+    Full board generated:
+    
+    +---+---+---+
+    |794|512|386|
+    |318|964|257|
+    |562|387|914|
+    +---+---+---+
+    |429|831|765|
+    |871|256|493|
+    |635|749|128|
+    +---+---+---+
+    |247|695|831|
+    |953|178|642|
+    |186|423|579|
+    +---+---+---+
+    
+    Unassigning row 7 column 5...
+    Unassigning row 3 column 2...
+    Unassigning row 1 column 3...
+    Unassigning row 3 column 3...
+    Unassigning row 8 column 7...
+    Unassigning row 8 column 2...
+    Unassigning row 7 column 3...
+    Unassigning row 5 column 6...
+    Unassigning row 4 column 3...
+    Unassigning row 8 column 3...
+    Unassigning row 8 column 5...
+    Unassigning row 8 column 8...
+    Unassigning row 2 column 8...
+    Unassigning row 2 column 4...
+    Unassigning row 6 column 4...
+    Unassigning row 7 column 7...
+    Unassigning row 9 column 9...
+    Unassigning row 2 column 6...
+    Unassigning row 8 column 4...
+    Unassigning row 9 column 2...
+    Unassigning row 9 column 3...
+    Unassigning row 9 column 6...
+    Unassigning row 4 column 2...
+    Unassigning row 7 column 2...
+    Unassigning row 1 column 8...
+    Unassigning row 3 column 7...
+    Unassigning row 9 column 7...
+    Unassigning row 3 column 1...
+    Unassigning row 1 column 6...
+    Unassigning row 8 column 9...
+    Unassigning row 7 column 1...
+    Unassigning row 4 column 1.  2 solutions found.
+    Row 4 column 1 restored.
+    
+    Solution (after 31 values unassigned):
+    
+    +---+---+---+
+    |79.|51.|3.6|
+    |318|.6.|2.7|
+    |...|387|.14|
+    +---+---+---+
+    |4..|831|765|
+    |871|25.|493|
+    |635|.49|128|
+    +---+---+---+
+    |...|6.5|.31|
+    |9..|..8|...|
+    |1..|42.|.7.|
+    +---+---+---+</pre>
+
+    <a name="r0"><i>Extra example:</i></a>&nbsp;
+    The output for running
+    <b><tt>"hw5 gen -info <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/r0.bin">r0.bin</a></tt>"</b>
+    has also been made <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/r0-output.txt">available</a>.
+</blockquote>
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="shuffle"><b>Random Shuffle</b></a>
+                    </font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+Given a list of N elements, please use the algorithm described
+here to create a random shuffle of the list.
+
+<p>
+
+The algorithm is as follows:
+   </p><pre>   output_list = an empty list
+   while (input_list is not empty) {
+       L = length of input_list
+       R = RandomIndex(L)
+       E = R<sup>th</sup> element in input_list
+       remove E from input_list
+       append E to output_list
+   }
+   return output_list</pre>
+
+<a name="randomindex">The</a>
+<tt>RandomIndex(L)</tt> function with <tt>L &gt; 0</tt> returns a value <tt>R</tt>
+such that <tt>0 &#8804; R &lt; L</tt> using bytes from a source of
+random bytes (i.e, <tt>rndfile</tt> or <tt>stdin</tt>) as follows.
+First you read 4 bytes from the input to form a 32-bit unsigned integer <tt>X</tt>.
+The first byte you read goes into the most-significant byte of <tt>X</tt>, the
+2nd byte you read goes into the 2nd most-significant byte of <tt>X</tt>, the
+3rd byte you read goes into the 3rd most-significant byte of <tt>X</tt>, and the
+4th byte you read goes into the least-significant byte of <tt>X</tt>.  Then you
+calculate <tt>R = X % L</tt> where <tt>%</tt> is the modular division
+operator (i.e., <tt>R</tt> is the remainder if you divide <tt>X</tt> by <tt>L</tt>).
+<tt>R</tt> should be used as a <b>zero-based</b> index to
+select the R<sup>th</sup> element from the input list for removal.
+Please note that even if <tt>L = 1</tt>,
+you must still consume 4 bytes of data from the input.
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="grading"><b>Grading Guidelines</b></a>
+                    </font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+<!--
+The grading guidelines is not available yet.
+  -->
+
+The <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/grading.txt">grading guidelines</a> has been made available.
+Please run the scripts in the guidelines on <tt>nunki.usc.edu</tt>.
+It is possible that there are bugs in the guidelines.  If you find
+bugs, please let the instructor know as soon as possible.
+
+<p>     
+        
+The grading guidelines is the <b>only</b> grading procedure we will use to
+grade your program.  No other grading procedure will be used.
+To the best of our effort, we will only change the testing data for
+grading but not the commands.  (We may make minor changes if we discover
+bugs in the script or things that we forgot to test.)  It is strongly
+recommended that you run your code through the scripts in the grading guidelines.
+            </p></td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="misc"><b>Miscellaneous Requirements and Hints</b></a>
+                    </font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+<ul>
+<li>Please read the <a href="http://merlot.usc.edu/cs570-f12/homeworks/prog-faq">programming FAQ</a> if you
+    need a refresher on C/C++ file I/O and bit/byte manipulications.
+<p>
+</p></li><li>You must <b>not use any external code segments</b>
+    to implement this assignment.
+    You must implement all these functionalities from scratch.
+<p>
+</p></li><li>If the size of the input file is large, you <b>must not</b> read the
+    whole file into a large memory buffer and then process the file data.
+    You must read the file <b>incrementally</b>.
+<p>
+</p></li><li>It's important that <b>every byte</b> of your data is read and written
+    correctly.  You will <b>lose a lot of points</b> if one byte of data is
+    generated incorrectly!  The grading of this assignment will be <b>harsh</b>
+    and you must make your code to work according to the posted
+    <a href="http://merlot.usc.edu/cs570-f12/homeworks/hw5/#grading">grading guidelines</a>.
+<p>
+</p></li><li>Please follow the UNIX convention that, when your output is an ASCII
+    file (such as a Sudoku puzzle output),
+    append '\n' in the last line of the output if it's not a
+    blank line.  (This way, you don't get the commandline prompt appearing at
+    the wrong place on the screen.)
+<p>
+</p></li><li>The Solaris workstations in the ISD lab in SAL have the same
+    setup as nunki.usc.edu.  So, if you are logged on to one of
+    these workstations, please do your development locally and
+    not to overload nunki unnecessarily.
+<p>
+</p></li><li>Start working on this <b>early</b>!  Please don't complain
+    to the instructor that this assignment is too tedious or
+    it takes too much work just to parse the commandline.
+    Get it done early and get it done right!
+</li></ul>
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- Section -->
+        <tr><td colspan="3" align="LEFT" bgcolor="#000000" width="1200">
+                <font color="#ffffff"><a name="submit"><b>Submission</b></a></font>
+            </td>
+        </tr>
+        <!-- Top Section -->
+        <tr><td colspan="3" align="LEFT">
+All assignments are to be submitted electronically - including
+your README file. To submit your work, you must first
+<tt>tar</tt> all the files you want to submit into a <b>tarball</b> and
+<tt>gzip</tt> it to create a <b>gzipped tarfile</b> named
+<tt><b>hw5.tar.gz</b></tt>.  Then you upload
+<tt><b>hw5.tar.gz</b></tt> to the
+<a href="http://merlot.usc.edu/cs570-f12/bsubmit.html">Bistro</a> system.
+On <tt>nunki.usc.edu</tt> or <tt>aludra.usc.edu</tt>,
+the command you can use to create a gzipped tarfile is:
+
+    <pre>    /usr/usc/bin/gtar cvzf hw5.tar.gz MYFILES</pre>
+
+Where <b><tt>MYFILES</tt></b> is the list of file names that you are submitting
+(you can also use wildcard characters if you are sure that it will pick up only
+the right files).
+<b>DO NOT</b> submit your compiled code, just your source code and
+README file.  <b>Two point will be deducted</b> if you submit extra
+binary files, such as <tt>hw5</tt>, <tt>.o</tt>,
+<tt>core</tt>, or files that can be <b>generated</b> from the rest of your submission.
+
+<p>
+Please note that the 2nd commandline argument of the <tt>gtar</tt> command above
+is the <b>output</b> filename of the <tt>gtar</tt> command.  So, if you omit
+<tt>hw5.tar.gz</tt> above, you may accidentally replace one of your files with
+the output of the <tt>gtar</tt> command.  So, please make sure that the
+first commandline argument is <tt><b>cvzf</b></tt> and the 2nd commandline argument
+is <tt><b>hw5.tar.gz</b></tt>.
+
+</p><p>
+In your README file, you should include the command that the grader
+should use to compile your code to generate <b><tt>hw5</tt></b>.
+If you don't include such instruction, the grader will assume that the command
+specified in the spec should be used to compile your code.
+But if they can't get your code to compile easily and you don't submit
+compilation instructions, you will lose points.  Please also note that
+you MUST include a README file in your submission.  If you have nothing
+to put inside the README file, please write "(This file intentionally left blank.)"
+in your README file.
+
+</p><p>
+Here are a couple of sample commands for creating your <tt>hw5.tar.gz</tt> file
+(your command will vary depending on what files you want to submit):
+    </p><pre>    /usr/usc/bin/gtar cvzf hw5.tar.gz *.c *.h README
+    /usr/usc/bin/gtar cvzf hw5.tar.gz *.cpp *.h README.txt</pre>
+
+You should read the output of the above commands carefully to make sure
+that <tt>hw5.tar.gz</tt> is created properly.
+If you don't understand the output of the above commands, you need to learn
+how to read it!  It's your responsibility to ensure that
+<tt>hw5.tar.gz</tt> is created properly.
+
+<p>
+You need to run <a href="http://merlot.usc.edu/cs570-f12/bsubmit.html"><b><tt>bsubmit</tt></b></a> to
+submit hw5.tar.gz to the submission server.
+Please use the following command:
+    </p><pre><b>
+    ~csci551b/bin/bsubmit upload \
+        -email `whoami`@usc.edu \
+        -event bourbon.usc.edu_80_1291227186_68 \
+        -file hw5.tar.gz</b></pre>
+
+If the command is executed successfully, the output should look like the
+<a href="http://merlot.usc.edu/cs570-f12/bsubmit.html#normal">sample mentioned in the submission web page</a>.
+If it doesn't look like that, please fix your command and rerun it until it looks
+right.  If there are problems, please contact the instructor.
+
+<p>
+It is extreme important that you also <a href="http://merlot.usc.edu/cs570-f12/submit.html#verify"><b>verify your submission</b></a>
+after you have submitted <tt>hw5.tar.gz</tt> electronically to make
+sure that every you have submitted is everything you wanted us to grade.
+                                                                                                                                       524,1         96%
+</p><p>
+Finally, please be familiar with the <a href="http://merlot.usc.edu/cs570-f12/submit.html">Electronic Submission Guidelines</a>
+and information on the <a href="http://merlot.usc.edu/cs570-f12/bsubmit.html">bsubmit web page</a>.
+            </p></td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        </tbody></table>
+    </td>
+</tr>
+</tbody></table>
+
+<hr>
+[<i>Last updated Mon Sep 17 2012</i>] &nbsp;&nbsp;
+[<i>Please see <a href="http://merlot.usc.edu/cs570-f12/copyright.html">copyright</a> regarding copying.</i>]
+
+<!-- @(#)$Id: index.html,v 1.3 2012/09/03 20:43:58 william Exp $ -->
+
+
+
+</body></html>
